@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Faculty Dashboard | DropoutGuard</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+
+        /* SIDEBAR */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            padding: 25px 18px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 45px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #6c63ff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            text-decoration: none;
+            color: #6b7280;
+            padding: 14px 15px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            background: #f0efff;
+            color: #6c63ff;
+        }
+
+        .nav-link.active {
+            background: #6c63ff;
+            color: white;
+        }
+
+
+        /* MAIN */
+
+        .main-content {
+            margin-left: 250px;
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .page-title h1 {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .page-title p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+
+        .faculty-profile {
+            background: white;
+            padding: 10px 16px;
+            border-radius: 12px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .faculty-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #6c63ff;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+
+        /* STATS */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        }
+
+        .stat-title {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .high {
+            color: #dc2626;
+        }
+
+        .medium {
+            color: #d97706;
+        }
+
+        .low {
+            color: #16a34a;
+        }
+
+
+        /* CARD */
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        }
+
+        .card-heading {
+            margin-bottom: 20px;
+        }
+
+        .card-heading h2 {
+            font-size: 19px;
+            margin-bottom: 5px;
+        }
+
+        .card-heading p {
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+
+        /* FILTER */
+
+        .filter-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .search-input,
+        .filter-select {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            font-size: 13px;
+        }
+
+        .search-input {
+            flex: 1;
+        }
+
+
+        /* TABLE */
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8f8ff;
+            text-align: left;
+            padding: 14px;
+            font-size: 12px;
+        }
+
+        td {
+            padding: 15px 14px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 13px;
+        }
+
+
+        .student-name {
+            font-weight: bold;
+        }
+
+        .student-id {
+            color: #9ca3af;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+
+        .risk-badge {
+            display: inline-block;
+            padding: 6px 11px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .risk-high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .risk-medium {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .risk-low {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+
+        .action-btn {
+            border: none;
+            background: #6c63ff;
+            color: white;
+            padding: 9px 13px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .action-btn:hover {
+            background: #554de5;
+        }
+
+
+        /* INTERVENTION */
+
+        .intervention-box {
+            background: #f8f8ff;
+            border-radius: 12px;
+            padding: 20px;
+            display: none;
+        }
+
+        .intervention-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .intervention-item {
+            padding: 13px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #6c63ff;
+        }
+
+        .intervention-item strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .intervention-item span {
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+
+        @media(max-width:1100px) {
+
+            .stats-grid {
+                grid-template-columns: repeat(2,1fr);
+            }
+        }
+
+
+        @media(max-width:800px) {
+
+            .sidebar {
+                width: 70px;
+            }
+
+            .brand-name {
+                display: none;
+            }
+
+            .nav-link span:not(.nav-icon) {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-row {
+                flex-direction: column;
+            }
+        }
+
+
+        /* INTERVENTION TRACKING */
+
+        .intervention-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            margin-bottom: 18px;
+        }
+
+        .create-intervention-btn {
+            border: none;
+            background: #6c63ff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .create-intervention-btn:hover {
+            background: #554de5;
+        }
+
+        .status-select {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 11px;
+            background: white;
+        }
+
+        .save-status-btn {
+            border: none;
+            background: #1f2937;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .save-status-btn:hover {
+            background: #111827;
+        }
+
+        .intervention-history-title {
+            margin-top: 18px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .intervention-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .status-open {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .status-progress {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-resolved {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .empty-intervention {
+            color: #9ca3af;
+            font-size: 12px;
+            padding: 10px 0;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🎓
+            </div>
+
+            <span class="brand-name">
+                DropoutGuard
+            </span>
+
+        </div>
+
+
+        <nav class="nav-menu">
+
+            <a href="dashboard.html"
+               class="nav-link">
+
+                <span class="nav-icon">📊</span>
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="prediction.html"
+               class="nav-link">
+
+                <span class="nav-icon">🤖</span>
+                <span>Prediction</span>
+
+            </a>
+
+
+            <a href="students.html"
+               class="nav-link">
+
+                <span class="nav-icon">👨‍🎓</span>
+                <span>Students</span>
+
+            </a>
+
+
+            <a href="faculty.html"
+               class="nav-link active">
+
+                <span class="nav-icon">👨‍🏫</span>
+                <span>Faculty</span>
+
+            </a>
+
+
+            <a href="reports.html"
+               class="nav-link">
+
+                <span class="nav-icon">📈</span>
+                <span>Reports</span>
+
+            </a>
+
+
+            <a href="index.html"
+               class="nav-link">
+
+                <span class="nav-icon">🚪</span>
+                <span>Logout</span>
+
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+
+    <!-- MAIN -->
+
+    <main class="main-content">
+
+
+        <!-- HEADER -->
+
+        <header class="top-header">
+
+            <div class="page-title">
+
+                <h1>Faculty Dashboard</h1>
+
+                <p>
+                    Monitor student risk and manage early interventions.
+                </p>
+
+            </div>
+
+
+            <div class="faculty-profile">
+
+                <div class="faculty-avatar">
+                    F
+                </div>
+
+                <div>
+
+                    <strong>Faculty</strong>
+
+                    <div style="
+                        color:#9ca3af;
+                        font-size:11px;
+                        margin-top:3px;
+                    ">
+                        Faculty Account
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- STATS -->
+
+        <section class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <div class="stat-title">
+                    Total Students
+                </div>
+
+                <div class="stat-number"
+                     id="totalStudents">
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-title">
+                    High Risk Students
+                </div>
+
+                <div class="stat-number high"
+                     id="highRisk">
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-title">
+                    Medium Risk Students
+                </div>
+
+                <div class="stat-number medium"
+                     id="mediumRisk">
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-title">
+                    Low Risk Students
+                </div>
+
+                <div class="stat-number low"
+                     id="lowRisk">
+                    0
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- STUDENT RISK TABLE -->
+
+        <section class="card">
+
+            <div class="card-heading">
+
+                <h2>
+                    🚨 Student Risk Monitoring
+                </h2>
+
+                <p>
+                    Identify students who may require faculty intervention.
+                </p>
+
+            </div>
+
+
+            <div class="filter-row">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="search-input"
+                    placeholder="🔍 Search student by name or ID..."
+                >
+
+
+                <select
+                    id="riskFilter"
+                    class="filter-select"
+                >
+
+                    <option value="all">
+                        All Risk Levels
+                    </option>
+
+                    <option value="High Risk">
+                        High Risk
+                    </option>
+
+                    <option value="Medium Risk">
+                        Medium Risk
+                    </option>
+
+                    <option value="Low Risk">
+                        Low Risk
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Student
+                            </th>
+
+                            <th>
+                                Department
+                            </th>
+
+                            <th>
+                                Academic
+                            </th>
+
+                            <th>
+                                Attendance
+                            </th>
+
+                            <th>
+                                Dropout Probability
+                            </th>
+
+                            <th>
+                                Risk
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="studentTable">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- INTERVENTION -->
+
+        <section class="card">
+
+            <div class="card-heading">
+
+                <h2>
+                    👨‍🏫 Intervention Recommendation
+                </h2>
+
+                <p>
+                    Recommended action for the selected student.
+                </p>
+
+            </div>
+
+
+            <div
+                id="interventionBox"
+                class="intervention-box"
+            >
+
+                <div
+                    id="selectedStudent"
+                    class="intervention-title"
+                >
+                </div>
+
+
+                <div
+                    id="interventionContent"
+                >
+                </div>
+
+
+                <div
+                    id="interventionActions"
+                    class="intervention-actions"
+                >
+                </div>
+
+
+                <div
+                    id="interventionHistory"
+                >
+                </div>
+
+            </div>
+
+
+            <div
+                id="noSelection"
+                style="
+                    color:#9ca3af;
+                    font-size:13px;
+                "
+            >
+
+                Select a student from the table to view
+                intervention recommendations.
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+
+<script>
+
+
+const API_URL =
+    "http://127.0.0.1:8000";
+
+let students = [];
+
+
+
+// ==========================================
+// LOAD STUDENTS
+// ==========================================
+
+async function loadStudents() {
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/students`
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load students"
+            );
+        }
+
+
+        students =
+            await response.json();
+
+
+        updateStats();
+
+
+        displayStudents(
+            students
+        );
+
+
+    } catch (error) {
+
+    console.error("Backend Error:", error);
+
+    alert(
+        "Backend Error:\n" + error.message
+    );
+}
+
+
+
+// ==========================================
+// UPDATE STATS
+// ==========================================
+
+function updateStats() {
+
+    const high =
+        students.filter(
+            s =>
+                String(
+                    s.risk_level || ""
+                )
+                .toLowerCase()
+                .includes("high")
+        ).length;
+
+
+    const medium =
+        students.filter(
+            s =>
+                String(
+                    s.risk_level || ""
+                )
+                .toLowerCase()
+                .includes("medium")
+        ).length;
+
+
+    const low =
+        students.filter(
+            s =>
+                String(
+                    s.risk_level || ""
+                )
+                .toLowerCase()
+                .includes("low")
+        ).length;
+
+
+    document.getElementById(
+        "totalStudents"
+    ).textContent =
+        students.length;
+
+
+    document.getElementById(
+        "highRisk"
+    ).textContent =
+        high;
+
+
+    document.getElementById(
+        "mediumRisk"
+    ).textContent =
+        medium;
+
+
+    document.getElementById(
+        "lowRisk"
+    ).textContent =
+        low;
+
+}
+
+
+
+// ==========================================
+// DISPLAY STUDENTS
+// ==========================================
+
+function displayStudents(data) {
+
+    const table =
+        document.getElementById("studentTable");
+
+    table.innerHTML = "";
+
+    if (data.length === 0) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="7"
+                    style="
+                        text-align:center;
+                        padding:30px;
+                        color:#9ca3af;
+                    ">
+                    No students found.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    data.forEach(student => {
+
+        const risk =
+            student.risk_level || "Low Risk";
+
+        const riskLower =
+            risk.toLowerCase();
+
+        let riskClass = "risk-low";
+
+        if (riskLower.includes("high")) {
+
+            riskClass = "risk-high";
+
+        } else if (riskLower.includes("medium")) {
+
+            riskClass = "risk-medium";
+        }
+
+        const probability =
+            Number(
+                student.dropout_probability || 0
+            );
+
+        const row =
+            document.createElement("tr");
+
+        row.innerHTML = `
+
+            <td>
+
+                <div class="student-name">
+                    ${student.student_name || "Unknown"}
+                </div>
+
+                <div class="student-id">
+                    ${student.student_id || "—"}
+                </div>
+
+            </td>
+
+            <td>
+                ${student.department || "—"}
+            </td>
+
+            <td>
+                ${Number(
+                    student.academic_average || 0
+                ).toFixed(2)}
+            </td>
+
+            <td>
+                ${Number(
+                    student.attendance || 0
+                ).toFixed(1)}%
+            </td>
+
+            <td>
+                ${probability.toFixed(2)}%
+            </td>
+
+            <td>
+
+                <span class="risk-badge ${riskClass}">
+                    ${risk}
+                </span>
+
+            </td>
+
+            <td>
+
+                <button
+                    type="button"
+                    class="action-btn intervention-btn">
+                    Intervention
+                </button>
+
+            </td>
+
+        `;
+
+        // IMPORTANT: direct click event
+        const interventionButton =
+            row.querySelector(".intervention-btn");
+
+        interventionButton.addEventListener(
+            "click",
+            function () {
+
+                console.log(
+                    "Intervention clicked:",
+                    student.student_id
+                );
+
+                viewIntervention(
+                    student.student_id
+                );
+
+            }
+        );
+
+        table.appendChild(row);
+
+    });
+
+}
+// ==========================================
+// INTERVENTION RECOMMENDATION
+// ==========================================
+
+let selectedStudentId = null;
+
+
+// ==========================================
+// INTERVENTION RECOMMENDATION + TRACKING
+// ==========================================
+
+async function viewIntervention(studentId) {
+    
+
+    console.log("Intervention clicked:", studentId);
+    alert("Intervention button clicked!");
+
+    const student =
+        students.find(
+            s =>
+                String(s.student_id) === String(studentId)
+        );
+
+
+    if (!student) {
+        return;
+    }
+
+
+    selectedStudentId = student.student_id;
+
+
+    document.getElementById(
+        "noSelection"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "interventionBox"
+    ).style.display = "block";
+
+
+    document.getElementById(
+        "selectedStudent"
+    ).textContent =
+        `${student.student_name} (${student.student_id})`;
+
+
+    const academic =
+        Number(student.academic_average || 0);
+
+    const attendance =
+        Number(student.attendance || 0);
+
+    const probability =
+        Number(student.dropout_probability || 0);
+
+    const debtor =
+        Number(student.debtor || 0);
+
+    const scholarship =
+        Number(student.scholarship || 0);
+
+
+    // ==========================================
+    // SHOW RECOMMENDATIONS
+    // ==========================================
+
+    let html = "";
+
+
+    if (academic < 10) {
+
+        html += `
+        <div class="intervention-item">
+            <strong>📚 Academic Counselling</strong>
+            <span>
+                Schedule faculty mentoring and create an academic improvement plan.
+            </span>
+        </div>`;
+    }
+
+
+    if (attendance < 75) {
+
+        html += `
+        <div class="intervention-item">
+            <strong>📅 Attendance Monitoring</strong>
+            <span>
+                Monitor attendance regularly and encourage consistent class participation.
+            </span>
+        </div>`;
+    }
+
+
+    if (debtor === 1) {
+
+        html += `
+        <div class="intervention-item">
+            <strong>💰 Financial Support</strong>
+            <span>
+                Refer the student to administration for financial assistance.
+            </span>
+        </div>`;
+    }
+
+
+    if (scholarship === 0) {
+
+        html += `
+        <div class="intervention-item">
+            <strong>🎓 Scholarship Guidance</strong>
+            <span>
+                Inform the student about available scholarship opportunities.
+            </span>
+        </div>`;
+    }
+
+
+    if (probability >= 40) {
+
+        html += `
+        <div class="intervention-item">
+            <strong>🚨 Immediate Faculty Mentoring</strong>
+            <span>
+                Schedule regular meetings and monitor student progress closely.
+            </span>
+        </div>`;
+    }
+
+
+    if (html === "") {
+
+        html = `
+        <div class="intervention-item">
+            <strong>✅ Continue Monitoring</strong>
+            <span>
+                No immediate intervention is required.
+            </span>
+        </div>`;
+    }
+
+
+    document.getElementById(
+        "interventionContent"
+    ).innerHTML = html;
+
+
+    
+    
+// Create Intervention button
+
+const interventionActions =
+    document.getElementById(
+        "interventionActions"
+    );
+
+interventionActions.innerHTML = `
+    <button
+        type="button"
+        id="createInterventionBtn"
+        class="create-intervention-btn"
+    >
+        + Create Intervention
+    </button>
+`;
+
+const createButton =
+    document.getElementById(
+        "createInterventionBtn"
+    );
+
+createButton.addEventListener(
+    "click",
+    function () {
+
+        console.log(
+            "Create Intervention clicked"
+        );
+
+        createIntervention();
+
+    }
+);
+
+
+    // Load saved interventions
+    await loadInterventions(student.student_id);
+
+}
+
+
+// ==========================================
+// CREATE INTERVENTION
+// ==========================================
+
+async function createIntervention() {
+
+    const student =
+        students.find(
+            s => String(s.student_id) === String(selectedStudentId)
+        );
+
+
+    if (!student) {
+        return;
+    }
+
+
+    const probability =
+        Number(student.dropout_probability || 0);
+
+
+    let interventionType = "Academic Monitoring";
+
+    if (probability >= 40) {
+        interventionType = "Faculty Mentoring";
+    } else if (Number(student.attendance || 0) < 75) {
+        interventionType = "Attendance Monitoring";
+    } else if (Number(student.debtor || 0) === 1) {
+        interventionType = "Financial Assistance";
+    }
+// Create button
+
+    const description =
+        `Recommended intervention for ${student.student_name}. ` +
+        `Risk level: ${student.risk_level || "Unknown"}. ` +
+        `Dropout probability: ${probability.toFixed(2)}%.`;
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/interventions`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        student_id: student.student_id,
+                        student_name: student.student_name,
+                        intervention_type: interventionType,
+                        description: description,
+                        status: "OPEN"
+                    })
+                }
+            );
+
+
+        if (!response.ok) {
+
+            const errorText = await response.text();
+
+            throw new Error(errorText);
+        }
+
+
+        alert("Intervention created successfully!");
+
+        await loadInterventions(
+            student.student_id
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Create intervention error:",
+            error
+        );
+
+        alert(
+            "Unable to create intervention. Please check the backend."
+        );
+    }
+
+}
+
+
+// ==========================================
+// LOAD INTERVENTIONS
+// ==========================================
+
+async function loadInterventions(studentId) {
+
+    const history =
+        document.getElementById(
+            "interventionHistory"
+        );
+
+
+    if (!history) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/interventions/${encodeURIComponent(studentId)}`
+            );
+
+
+        if (!response.ok) {
+            throw new Error("Unable to load interventions");
+        }
+
+
+        const interventions =
+            await response.json();
+
+
+        if (!interventions.length) {
+
+            history.innerHTML = `
+                <div class="intervention-history-title">
+                    Intervention Status
+                </div>
+
+                <div class="empty-intervention">
+                    No intervention has been created yet.
+                    Click <b>+ Create Intervention</b> to start tracking.
+                </div>
+            `;
+
+            return;
+        }
+
+
+        let historyHTML = `
+            <div class="intervention-history-title">
+                Intervention Status
+            </div>
+        `;
+
+
+        interventions.forEach(
+            intervention => {
+
+                const status =
+                    intervention.status || "OPEN";
+
+                let statusClass =
+                    "status-open";
+
+                if (status === "IN PROGRESS") {
+                    statusClass = "status-progress";
+                } else if (status === "RESOLVED") {
+                    statusClass = "status-resolved";
+                }
+
+
+                historyHTML += `
+                    <div class="intervention-item">
+
+                        <strong>
+                            ${intervention.intervention_type}
+                        </strong>
+
+                        <span>
+                            ${intervention.description || "No description"}
+                        </span>
+
+                        <div class="intervention-meta">
+
+                            <span class="status-badge ${statusClass}">
+                                ${status}
+                            </span>
+
+                            <div>
+
+                                <select
+                                    id="status-${intervention.id}"
+                                    class="status-select"
+                                >
+                                    <option value="OPEN" ${status === "OPEN" ? "selected" : ""}>
+                                        OPEN
+                                    </option>
+
+                                    <option value="IN PROGRESS" ${status === "IN PROGRESS" ? "selected" : ""}>
+                                        IN PROGRESS
+                                    </option>
+
+                                    <option value="RESOLVED" ${status === "RESOLVED" ? "selected" : ""}>
+                                        RESOLVED
+                                    </option>
+                                </select>
+
+                                <button
+                                    class="save-status-btn"
+                                    onclick="updateInterventionStatus(${intervention.id})"
+                                >
+                                    Update
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                `;
+            }
+        );
+
+
+        history.innerHTML = historyHTML;
+
+
+    } catch (error) {
+
+        console.error(
+            "Load interventions error:",
+            error
+        );
+
+        history.innerHTML = `
+            <div class="empty-intervention">
+                Unable to load intervention history.
+            </div>
+        `;
+    }
+
+}
+}
+
+
+// ==========================================
+// UPDATE INTERVENTION STATUS
+// ==========================================
+
+async function updateInterventionStatus(
+    interventionId
+) {
+
+    const select =
+        document.getElementById(
+            `status-${interventionId}`
+        );
+
+
+    if (!select) {
+        return;
+    }
+
+
+    const status = select.value;
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/interventions/${interventionId}/status?status=${encodeURIComponent(status)}`,
+                {
+                    method: "PUT"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            const errorText =
+                await response.text();
+
+            throw new Error(errorText);
+        }
+
+
+        alert(
+            `Intervention status updated to ${status}`
+        );
+
+
+        await loadInterventions(
+            selectedStudentId
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Update status error:",
+            error
+        );
+
+        alert(
+            "Unable to update intervention status."
+        );
+    }
+
+}
+
+
+// ==========================================
+// SEARCH
+// ==========================================
+
+document.getElementById(
+    "searchInput"
+).addEventListener(
+    "input",
+    filterStudents
+);
+
+
+
+// ==========================================
+// RISK FILTER
+// ==========================================
+
+document.getElementById(
+    "riskFilter"
+).addEventListener(
+    "change",
+    filterStudents
+);
+
+
+
+function filterStudents() {
+
+    const search =
+        document.getElementById(
+            "searchInput"
+        )
+        .value
+        .toLowerCase();
+
+
+    const risk =
+        document.getElementById(
+            "riskFilter"
+        )
+        .value;
+
+
+    const filtered =
+        students.filter(
+            student => {
+
+                const name =
+                    String(
+                        student.student_name || ""
+                    )
+                    .toLowerCase();
+
+
+                const id =
+                    String(
+                        student.student_id || ""
+                    )
+                    .toLowerCase();
+
+
+                const studentRisk =
+                    student.risk_level || "";
+
+
+                const matchesSearch =
+                    name.includes(search) ||
+                    id.includes(search);
+
+
+                const matchesRisk =
+                    risk === "all" ||
+                    studentRisk === risk;
+
+
+                return (
+                    matchesSearch &&
+                    matchesRisk
+                );
+
+            }
+        );
+
+
+    displayStudents(
+        filtered
+    );
+
+}
+
+
+
+// ==========================================
+// START
+// ==========================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadStudents
+);
+
+</script>
+
+
+</body>
+
+</html>

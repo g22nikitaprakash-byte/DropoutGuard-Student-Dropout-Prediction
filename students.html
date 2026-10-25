@@ -1,0 +1,2493 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students | DropoutGuard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            padding: 25px 18px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 45px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #6c63ff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 14px 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #6b7280;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            background: #f0efff;
+            color: #6c63ff;
+        }
+
+        .nav-link.active {
+            background: #6c63ff;
+            color: white;
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main-content {
+            margin-left: 250px;
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .page-header p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        /* ================= ADD BUTTON ================= */
+
+        .add-button {
+            background: #6c63ff;
+            color: white;
+            border: none;
+            padding: 13px 20px;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .add-button:hover {
+            background: #574fd6;
+        }
+
+        /* ================= STATISTICS ================= */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        .stat-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 11px;
+            background: #f0efff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .stat-number {
+            font-size: 25px;
+            font-weight: bold;
+            margin-top: 14px;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        /* ================= TABLE ================= */
+
+        .table-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        .table-header {
+            margin-bottom: 20px;
+        }
+
+        .table-header h2 {
+            font-size: 20px;
+        }
+
+        .table-header p {
+            color: #9ca3af;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 13px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #6c63ff;
+        }
+
+        .filter-select {
+            width: 180px;
+            padding: 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+            background: white;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .filter-select:focus {
+            border-color: #6c63ff;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        thead {
+            background: #f8f8ff;
+        }
+
+        th {
+            text-align: left;
+            padding: 14px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        td {
+            padding: 15px 14px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 13px;
+        }
+
+        tbody tr:hover {
+            background: #fafaff;
+        }
+
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .student-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #6c63ff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .student-name {
+            font-weight: bold;
+        }
+
+        .student-id {
+            color: #9ca3af;
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        /* ================= RISK ================= */
+
+        .risk-badge {
+            display: inline-block;
+            padding: 6px 11px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .medium {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .low {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        /* ================= PROGRESS ================= */
+
+        .progress-container {
+            width: 100px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 7px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-value {
+            height: 100%;
+            background: #6c63ff;
+        }
+
+        .progress-text {
+            font-size: 10px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        /* ================= ACTION ================= */
+
+        .view-button {
+            border: 1px solid #6c63ff;
+            background: white;
+            color: #6c63ff;
+            padding: 7px 12px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .view-button:hover {
+            background: #6c63ff;
+            color: white;
+        }
+
+        /* ================= MODAL ================= */
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 560px;
+            background: white;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+        }
+        .student-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 22px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.student-profile .student-avatar {
+    width: 55px;
+    height: 55px;
+    font-size: 18px;
+}
+
+.student-profile h3 {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.student-profile p {
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.profile-item {
+    background: #f8f8ff;
+    border-radius: 10px;
+    padding: 14px;
+}
+
+.profile-item span {
+    display: block;
+    color: #6b7280;
+    font-size: 11px;
+    margin-bottom: 6px;
+}
+
+.profile-item strong {
+    font-size: 14px;
+    color: #1f2937;
+}
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            font-size: 22px;
+        }
+
+        .close-button {
+            width: 34px;
+            height: 34px;
+            border: none;
+            border-radius: 50%;
+            background: #f3f4f6;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #4b5563;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            outline: none;
+            font-size: 13px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #6c63ff;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .cancel-button {
+            padding: 11px 18px;
+            border: 1px solid #d1d5db;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .save-button {
+            padding: 11px 18px;
+            border: none;
+            background: #6c63ff;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .save-button:hover {
+            background: #574fd6;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1100px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 70px;
+                padding: 20px 10px;
+            }
+
+            .brand-name {
+                display: none;
+            }
+
+            .nav-link span:not(.nav-icon) {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+                padding: 20px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+            <span class="brand-name">DropoutGuard</span>
+        </div>
+
+        <nav class="nav-menu">
+
+            <a href="dashboard.html" class="nav-link">
+                <span class="nav-icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="prediction.html" class="nav-link">
+                <span class="nav-icon">🤖</span>
+                <span>Prediction</span>
+            </a>
+
+            <a href="students.html" class="nav-link active">
+                <span class="nav-icon">👨‍🎓</span>
+                <span>Students</span>
+            </a>
+
+            <a href="reports.html" class="nav-link">
+                <span class="nav-icon">📈</span>
+                <span>Reports</span>
+            </a>
+
+            <a href="index.html" class="nav-link">
+                <span class="nav-icon">🚪</span>
+                <span>Logout</span>
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main-content">
+
+        <!-- HEADER -->
+
+        <div class="page-header">
+
+            <div>
+                <h1>Students</h1>
+                <p>Manage student records and monitor dropout risk.</p>
+            </div>
+
+            <button
+                type="button"
+                id="addStudentBtn"
+                class="add-button">
+
+                + Add Student
+
+            </button>
+
+        </div>
+
+
+        <!-- ================= STATISTICS ================= -->
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+
+                <div class="stat-card-top">
+
+                    <div>
+                        <div class="stat-label">
+                            Total Students
+                        </div>
+
+                        <div
+                            class="stat-number"
+                            id="totalStudents">
+                            0
+                        </div>
+                    </div>
+
+                    <div class="stat-icon">
+                        👨‍🎓
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-card-top">
+
+                    <div>
+                        <div class="stat-label">
+                            High Risk
+                        </div>
+
+                        <div
+                            class="stat-number"
+                            id="highRisk">
+                            0
+                        </div>
+                    </div>
+
+                    <div class="stat-icon">
+                        🔴
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-card-top">
+
+                    <div>
+                        <div class="stat-label">
+                            Medium Risk
+                        </div>
+
+                        <div
+                            class="stat-number"
+                            id="mediumRisk">
+                            0
+                        </div>
+                    </div>
+
+                    <div class="stat-icon">
+                        🟡
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-card-top">
+
+                    <div>
+                        <div class="stat-label">
+                            Low Risk
+                        </div>
+
+                        <div
+                            class="stat-number"
+                            id="lowRisk">
+                            0
+                        </div>
+                    </div>
+
+                    <div class="stat-icon">
+                        🟢
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= STUDENT TABLE ================= -->
+
+        <section class="table-card">
+
+            <div class="table-header">
+
+                <h2>Student Records</h2>
+
+                <p>
+                    Search and filter students based on their risk level.
+                </p>
+
+            </div>
+
+
+            <!-- SEARCH -->
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="search-input"
+                    placeholder="🔍 Search student by name or ID..."
+                >
+
+                <select
+                    id="riskFilter"
+                    class="filter-select">
+
+                    <option value="all">
+                        All Risk Levels
+                    </option>
+
+                    <option value="high">
+                        High Risk
+                    </option>
+
+                    <option value="medium">
+                        Medium Risk
+                    </option>
+
+                    <option value="low">
+                        Low Risk
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- TABLE -->
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Student</th>
+                            <th>Department</th>
+                            <th>Academic Score</th>
+                            <th>Attendance</th>
+                            <th>Risk</th>
+                            <th>Prediction</th>
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="studentTable">
+                    </tbody> 
+                
+
+
+                        
+                                
+
+
+
+                   
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================= ADD STUDENT MODAL ================= -->
+
+    <div
+        id="addStudentModal"
+        class="modal-overlay">
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <h2>
+                    Add Student
+                </h2>
+
+                <button
+                    type="button"
+                    id="closeModalBtn"
+                    class="close-button">
+
+                    ×
+
+                </button>
+
+            </div>
+
+
+            <form id="addStudentForm">
+
+    <div class="form-grid">
+
+        <!-- STUDENT NAME -->
+
+        <div class="form-group">
+
+            <label for="studentName">
+                Student Name
+            </label>
+
+            <input
+                type="text"
+                id="studentName"
+                placeholder="Enter student name"
+                required>
+
+        </div>
+
+
+        <!-- STUDENT ID -->
+
+        <div class="form-group">
+
+            <label for="studentId">
+                Student ID
+            </label>
+
+            <input
+                type="text"
+                id="studentId"
+                placeholder="STU008"
+                required>
+
+        </div>
+
+
+        <!-- DEPARTMENT -->
+
+        <div class="form-group full">
+
+            <label for="department">
+                Department
+            </label>
+
+            <input
+                type="text"
+                id="department"
+                placeholder="Information Technology"
+                required>
+
+        </div>
+
+
+        <!-- AGE -->
+
+        <div class="form-group">
+
+            <label for="age">
+                Age
+            </label>
+
+            <input
+                type="number"
+                id="age"
+                min="15"
+                max="60"
+                placeholder="20"
+                required>
+
+        </div>
+
+
+        <!-- ADMISSION GRADE -->
+
+        <div class="form-group">
+
+            <label for="admissionGrade">
+                Admission Grade
+            </label>
+
+            <input
+                type="number"
+                id="admissionGrade"
+                min="0"
+                max="200"
+                step="0.01"
+                placeholder="130"
+                required>
+
+        </div>
+
+
+        <!-- SEMESTER 1 GRADE -->
+
+        <div class="form-group">
+
+            <label for="semester1Grade">
+                Semester 1 Grade
+            </label>
+
+            <input
+                type="number"
+                id="semester1Grade"
+                min="0"
+                max="20"
+                step="0.01"
+                placeholder="12.5"
+                required>
+
+        </div>
+
+
+        <!-- SEMESTER 2 GRADE -->
+
+        <div class="form-group">
+
+            <label for="semester2Grade">
+                Semester 2 Grade
+            </label>
+
+            <input
+                type="number"
+                id="semester2Grade"
+                min="0"
+                max="20"
+                step="0.01"
+                placeholder="13.0"
+                required>
+
+        </div>
+
+
+        <!-- APPROVED UNITS SEM 1 -->
+
+        <div class="form-group">
+
+            <label for="approved1">
+                Approved Units – Semester 1
+            </label>
+
+            <input
+                type="number"
+                id="approved1"
+                min="0"
+                max="26"
+                placeholder="6"
+                required>
+
+        </div>
+
+
+        <!-- APPROVED UNITS SEM 2 -->
+
+        <div class="form-group">
+
+            <label for="approved2">
+                Approved Units – Semester 2
+            </label>
+
+            <input
+                type="number"
+                id="approved2"
+                min="0"
+                max="26"
+                placeholder="7"
+                required>
+
+        </div>
+
+
+        <!-- SCHOLARSHIP -->
+
+        <div class="form-group">
+
+            <label for="scholarship">
+                Scholarship Holder
+            </label>
+
+            <select
+                id="scholarship"
+                required>
+
+                <option value="">
+                    Select
+                </option>
+
+                <option value="1">
+                    Yes
+                </option>
+
+                <option value="0">
+                    No
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- DEBTOR -->
+
+        <div class="form-group">
+
+            <label for="debtor">
+                Debtor
+            </label>
+
+            <select
+                id="debtor"
+                required>
+
+                <option value="">
+                    Select
+                </option>
+
+                <option value="1">
+                    Yes
+                </option>
+
+                <option value="0">
+                    No
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- TUITION -->
+
+        <div class="form-group">
+
+            <label for="tuition">
+                Tuition Fees Up to Date
+            </label>
+
+            <select
+                id="tuition"
+                required>
+
+                <option value="">
+                    Select
+                </option>
+
+                <option value="1">
+                    Yes
+                </option>
+
+                <option value="0">
+                    No
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- ATTENDANCE -->
+
+        <div class="form-group">
+
+            <label for="attendance">
+                Attendance (%)
+            </label>
+
+            <input
+                type="number"
+                id="attendance"
+                min="0"
+                max="100"
+                step="0.1"
+                placeholder="80"
+                required>
+
+        </div>
+
+    </div>
+
+
+    <!-- BUTTONS -->
+
+    <div class="modal-actions">
+
+        <button
+            type="button"
+            id="cancelModalBtn"
+            class="cancel-button">
+
+            Cancel
+
+        </button>
+
+
+        <button
+            type="submit"
+            class="save-button">
+
+            Predict & Save Student
+
+        </button>
+
+    </div>
+
+</form>
+
+        </div>
+
+    </div>
+    <!-- ================= VIEW STUDENT MODAL ================= -->
+
+<div id="viewStudentModal" class="modal-overlay">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h2>Student Profile</h2>
+
+            <button
+                type="button"
+                id="closeViewModalBtn"
+                class="close-button">
+                ×
+            </button>
+
+        </div>
+
+        <div class="student-profile">
+
+            <div class="student-avatar" id="viewAvatar">
+                --
+            </div>
+
+            <div>
+                <h3 id="viewName">--</h3>
+                <p id="viewStudentId">--</p>
+            </div>
+
+        </div>
+
+        <div class="profile-grid">
+
+            <div class="profile-item">
+                <span>Department</span>
+                <strong id="viewDepartment">--</strong>
+            </div>
+
+            <div class="profile-item">
+                <span>Academic Average</span>
+                <strong id="viewAcademic">--</strong>
+            </div>
+
+            <div class="profile-item">
+                <span>Attendance</span>
+                <strong id="viewAttendance">--</strong>
+            </div>
+
+            <div class="profile-item">
+                <span>Risk Level</span>
+                <strong id="viewRisk">--</strong>
+            </div>
+
+            <div class="profile-item">
+                <span>Prediction</span>
+                <strong id="viewPrediction">--</strong>
+            </div>
+
+            <div class="profile-item">
+                <span>Dropout Probability</span>
+                <strong id="viewProbability">--</strong>
+            </div>
+
+            <div class="profile-item">
+                <span>Created At</span>
+                <strong id="viewCreatedAt">--</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* =====================================================
+       BACKEND URL
+    ===================================================== */
+
+    const API_URL = "http://127.0.0.1:8000";
+
+
+    /* =====================================================
+       ELEMENTS
+    ===================================================== */
+
+    const addStudentBtn =
+        document.getElementById("addStudentBtn");
+
+    const modal =
+        document.getElementById("addStudentModal");
+
+    const closeModalBtn =
+        document.getElementById("closeModalBtn");
+
+    const cancelModalBtn =
+        document.getElementById("cancelModalBtn");
+
+    const form =
+        document.getElementById("addStudentForm");
+
+    const searchInput =
+        document.getElementById("searchInput");
+
+    const riskFilter =
+        document.getElementById("riskFilter");
+
+    const studentTable =
+        document.getElementById("studentTable");
+
+
+    /* =====================================================
+       VIEW STUDENT MODAL
+    ===================================================== */
+
+    const viewStudentModal =
+        document.getElementById("viewStudentModal");
+
+    const closeViewModalBtn =
+        document.getElementById("closeViewModalBtn");
+
+
+    /* =====================================================
+       OPEN ADD STUDENT MODAL
+    ===================================================== */
+
+    addStudentBtn.addEventListener(
+        "click",
+        function () {
+
+            form.reset();
+
+            modal.classList.add("show");
+
+            document
+                .getElementById("studentName")
+                .focus();
+
+        }
+    );
+
+
+    /* =====================================================
+       CLOSE ADD STUDENT MODAL
+    ===================================================== */
+
+    closeModalBtn.addEventListener(
+        "click",
+        function () {
+
+            modal.classList.remove("show");
+
+        }
+    );
+
+
+    cancelModalBtn.addEventListener(
+        "click",
+        function () {
+
+            modal.classList.remove("show");
+
+        }
+    );
+
+
+    modal.addEventListener(
+        "click",
+        function (event) {
+
+            if (event.target === modal) {
+
+                modal.classList.remove("show");
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       CLOSE VIEW STUDENT MODAL
+    ===================================================== */
+
+    closeViewModalBtn.addEventListener(
+        "click",
+        function () {
+
+            viewStudentModal.classList.remove("show");
+
+        }
+    );
+
+
+    viewStudentModal.addEventListener(
+        "click",
+        function (event) {
+
+            if (event.target === viewStudentModal) {
+
+                viewStudentModal.classList.remove(
+                    "show"
+                );
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       SAVE STUDENT
+       1. Send data to ML
+       2. Get prediction
+       3. Save complete record to SQLite
+    ===================================================== */
+
+    form.addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            /* =================================================
+               GET FORM VALUES
+            ================================================= */
+
+            const name =
+                document
+                    .getElementById("studentName")
+                    .value
+                    .trim();
+
+
+            const studentId =
+                document
+                    .getElementById("studentId")
+                    .value
+                    .trim();
+
+
+            const department =
+                document
+                    .getElementById("department")
+                    .value
+                    .trim();
+
+
+            const age =
+                Number(
+                    document
+                        .getElementById("age")
+                        .value
+                );
+
+
+            const admissionGrade =
+                Number(
+                    document
+                        .getElementById("admissionGrade")
+                        .value
+                );
+
+
+            const semester1Grade =
+                Number(
+                    document
+                        .getElementById("semester1Grade")
+                        .value
+                );
+
+
+            const semester2Grade =
+                Number(
+                    document
+                        .getElementById("semester2Grade")
+                        .value
+                );
+
+
+            const approved1 =
+                Number(
+                    document
+                        .getElementById("approved1")
+                        .value
+                );
+
+
+            const approved2 =
+                Number(
+                    document
+                        .getElementById("approved2")
+                        .value
+                );
+
+
+            const scholarship =
+                Number(
+                    document
+                        .getElementById("scholarship")
+                        .value
+                );
+
+
+            const debtor =
+                Number(
+                    document
+                        .getElementById("debtor")
+                        .value
+                );
+
+
+            const tuition =
+                Number(
+                    document
+                        .getElementById("tuition")
+                        .value
+                );
+
+
+            const attendance =
+                Number(
+                    document
+                        .getElementById("attendance")
+                        .value
+                );
+
+
+            /* =================================================
+               VALIDATION
+            ================================================= */
+
+            if (
+                !name ||
+                !studentId ||
+                !department
+            ) {
+
+                alert(
+                    "Please fill Student Name, Student ID and Department."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                age < 15 ||
+                age > 60
+            ) {
+
+                alert(
+                    "Age must be between 15 and 60."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                admissionGrade < 0 ||
+                admissionGrade > 200
+            ) {
+
+                alert(
+                    "Admission Grade must be between 0 and 200."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                semester1Grade < 0 ||
+                semester1Grade > 20 ||
+                semester2Grade < 0 ||
+                semester2Grade > 20
+            ) {
+
+                alert(
+                    "Semester grades must be between 0 and 20."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                approved1 < 0 ||
+                approved1 > 26 ||
+                approved2 < 0 ||
+                approved2 > 26
+            ) {
+
+                alert(
+                    "Approved units must be between 0 and 26."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                attendance < 0 ||
+                attendance > 100
+            ) {
+
+                alert(
+                    "Attendance must be between 0 and 100."
+                );
+
+                return;
+
+            }
+
+
+            try {
+
+                /* =================================================
+                   STEP 1
+                   SEND DATA TO ML MODEL
+                ================================================= */
+
+                const predictionResponse =
+                    await fetch(
+                        API_URL + "/predict",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify({
+
+                                    age: age,
+
+                                    admission_grade:
+                                        admissionGrade,
+
+                                    attendance:
+                                        attendance,
+
+                                    semester1_grade:
+                                        semester1Grade,
+
+                                    semester2_grade:
+                                        semester2Grade,
+
+                                    approved1:
+                                        approved1,
+
+                                    approved2:
+                                        approved2,
+
+                                    scholarship:
+                                        scholarship,
+
+                                    debtor:
+                                        debtor,
+
+                                    tuition:
+                                        tuition
+
+                                })
+                        }
+                    );
+
+
+                /* ML ERROR */
+
+                if (!predictionResponse.ok) {
+
+                    const errorData =
+                        await predictionResponse.json();
+
+                    alert(
+                        errorData.detail ||
+                        "ML prediction failed."
+                    );
+
+                    return;
+
+                }
+
+
+                const predictionResult =
+                    await predictionResponse.json();
+
+
+                /* =================================================
+                   GET REAL ML RESULT
+                ================================================= */
+
+                const prediction =
+                    predictionResult.prediction;
+
+
+                const dropoutProbability =
+                    Number(
+                        predictionResult.dropout_probability || 0
+                    );
+
+
+                const riskLevel =
+                    predictionResult.risk_level ||
+                    "Low Risk";
+
+
+                const academicAverage =
+                    Number(
+                        predictionResult.academic_average || 0
+                    );
+
+
+                /* =================================================
+                   STEP 2
+                   CREATE DATABASE RECORD
+                ================================================= */
+
+                const studentData = {
+
+                    student_name:
+                        name,
+
+                    student_id:
+                        studentId,
+
+                    department:
+                        department,
+
+                    age:
+                        age,
+
+                    admission_grade:
+                        admissionGrade,
+
+                    attendance:
+                        attendance,
+
+                    semester1_grade:
+                        semester1Grade,
+
+                    semester2_grade:
+                        semester2Grade,
+
+                    approved1:
+                        approved1,
+
+                    approved2:
+                        approved2,
+
+                    scholarship:
+                        scholarship,
+
+                    debtor:
+                        debtor,
+
+                    tuition:
+                        tuition,
+
+                    academic_average:
+                        academicAverage,
+
+                    dropout_probability:
+                        dropoutProbability,
+
+                    risk_level:
+                        riskLevel,
+
+                    prediction:
+                        prediction
+
+                };
+
+
+                /* =================================================
+                   STEP 3
+                   SAVE TO SQLITE
+                ================================================= */
+
+                const saveResponse =
+                    await fetch(
+                        API_URL + "/students",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    studentData
+                                )
+                        }
+                    );
+
+
+                /* SAVE ERROR */
+
+                if (!saveResponse.ok) {
+
+                    const errorData =
+                        await saveResponse.json();
+
+                    alert(
+                        errorData.detail ||
+                        "Failed to save student."
+                    );
+
+                    return;
+
+                }
+
+
+                const saveResult =
+                    await saveResponse.json();
+
+
+                /* SUCCESS */
+
+                alert(
+                    "Student predicted and saved successfully! 🎓\n\n" +
+                    "Prediction: " + prediction +
+                    "\nDropout Probability: " +
+                    dropoutProbability + "%" +
+                    "\nRisk Level: " +
+                    riskLevel
+                );
+
+
+                /* CLOSE FORM */
+
+                modal.classList.remove(
+                    "show"
+                );
+
+
+                form.reset();
+
+
+                /* =================================================
+                   RELOAD DATABASE STUDENTS
+                ================================================= */
+
+                studentTable.innerHTML = "";
+
+                await loadStudents();
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Prediction / Save Error:",
+                    error
+                );
+
+                alert(
+                    "Cannot connect to backend.\n\n" +
+                    "Make sure FastAPI is running on:\n" +
+                    API_URL
+                );
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       LOAD STUDENTS FROM DATABASE
+    ===================================================== */
+
+    async function loadStudents() {
+
+        try {
+
+            const response =
+                await fetch(
+                    API_URL + "/students"
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to fetch students."
+                );
+
+            }
+
+
+            const students =
+                await response.json();
+
+
+            /* DATABASE RECORDS */
+
+            students.forEach(
+                function (student) {
+
+                    addDatabaseStudentToTable(
+                        student
+                    );
+
+                }
+            );
+
+
+            updateStatistics();
+
+            filterStudents();
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Load Students Error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       CREATE TABLE ROW FROM DATABASE RECORD
+    ===================================================== */
+
+    function addDatabaseStudentToTable(student) {
+
+        const row =
+            document.createElement(
+                "tr"
+            );
+
+
+        /* RISK CLASS */
+
+        const riskText =
+            student.risk_level ||
+            "Low Risk";
+
+
+        let riskClass =
+            "low";
+
+
+        if (
+            riskText
+                .toLowerCase()
+                .includes("high")
+        ) {
+
+            riskClass =
+                "high";
+
+        }
+
+        else if (
+            riskText
+                .toLowerCase()
+                .includes("medium")
+        ) {
+
+            riskClass =
+                "medium";
+
+        }
+
+
+        /* STUDENT DATA */
+
+        const name =
+            student.student_name ||
+            "Unknown";
+
+
+        const studentId =
+            student.student_id ||
+            "--";
+
+
+        const department =
+            student.department ||
+            "--";
+
+
+        const academicScore =
+            Number(
+                student.academic_average || 0
+            );
+
+
+        const attendance =
+            Number(
+                student.attendance || 0
+            );
+
+
+        const dropoutProbability =
+            Number(
+                student.dropout_probability || 0
+            );
+
+
+        const prediction =
+            student.prediction ||
+            "--";
+
+
+        /* INITIALS */
+
+        const initials =
+            name
+                .split(/\s+/)
+                .filter(Boolean)
+                .map(
+                    word =>
+                        word.charAt(0)
+                )
+                .join("")
+                .substring(
+                    0,
+                    2
+                )
+                .toUpperCase();
+
+
+        row.setAttribute(
+            "data-risk",
+            riskClass
+        );
+
+
+        /* TABLE ROW */
+
+        row.innerHTML = `
+
+            <td>
+
+                <div class="student-info">
+
+                    <div class="student-avatar">
+                        ${initials}
+                    </div>
+
+                    <div>
+
+                        <div class="student-name">
+                            ${escapeHtml(name)}
+                        </div>
+
+                        <div class="student-id">
+                            ${escapeHtml(studentId)}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </td>
+
+
+            <td>
+                ${escapeHtml(department)}
+            </td>
+
+
+            <td>
+
+                <div class="progress-container">
+
+                    <div class="progress-bar">
+
+                        <div
+                            class="progress-value"
+                            style="width:${Math.min(
+                                academicScore,
+                                100
+                            )}%">
+
+                        </div>
+
+                    </div>
+
+                    <div class="progress-text">
+                        ${academicScore}%
+                    </div>
+
+                </div>
+
+            </td>
+
+
+            <td>
+                ${attendance}%
+            </td>
+
+
+            <td>
+
+                <span class="risk-badge ${riskClass}">
+
+                    ${
+                        riskClass === "high"
+                            ? "High"
+                            : riskClass === "medium"
+                                ? "Medium"
+                                : "Low"
+                    }
+
+                </span>
+
+            </td>
+
+
+            <td>
+                ${
+                    prediction +
+                    " (" +
+                    dropoutProbability +
+                    "%)"
+                }
+            </td>
+
+
+            <td>
+
+                <button
+                    type="button"
+                    class="view-button">
+
+                    View
+
+                </button>
+
+            </td>
+
+        `;
+
+
+        /* VIEW BUTTON */
+
+        row
+            .querySelector(
+                ".view-button"
+            )
+            .addEventListener(
+                "click",
+                function () {
+
+                    showStudentProfile(
+                        student
+                    );
+
+                }
+            );
+
+
+        studentTable.appendChild(
+            row
+        );
+
+    }
+
+
+    /* =====================================================
+       SHOW STUDENT PROFILE
+    ===================================================== */
+
+    function showStudentProfile(student) {
+
+        const name =
+            student.student_name ||
+            "--";
+
+
+        const initials =
+            name
+                .split(/\s+/)
+                .filter(Boolean)
+                .map(
+                    word =>
+                        word.charAt(0)
+                )
+                .join("")
+                .substring(
+                    0,
+                    2
+                )
+                .toUpperCase();
+
+
+        document.getElementById(
+            "viewAvatar"
+        ).innerText =
+            initials;
+
+
+        document.getElementById(
+            "viewName"
+        ).innerText =
+            name;
+
+
+        document.getElementById(
+            "viewStudentId"
+        ).innerText =
+            student.student_id ||
+            "--";
+
+
+        document.getElementById(
+            "viewDepartment"
+        ).innerText =
+            student.department ||
+            "--";
+
+
+        document.getElementById(
+            "viewAcademic"
+        ).innerText =
+            (student.academic_average || 0) +
+            "%";
+
+
+        document.getElementById(
+            "viewAttendance"
+        ).innerText =
+            (student.attendance || 0) +
+            "%";
+
+
+        document.getElementById(
+            "viewRisk"
+        ).innerText =
+            student.risk_level ||
+            "--";
+
+
+        document.getElementById(
+            "viewPrediction"
+        ).innerText =
+            student.prediction ||
+            "--";
+
+
+        document.getElementById(
+            "viewProbability"
+        ).innerText =
+            (student.dropout_probability || 0) +
+            "%";
+
+
+        document.getElementById(
+            "viewCreatedAt"
+        ).innerText =
+            student.created_at ||
+            "--";
+
+
+        viewStudentModal.classList.add(
+            "show"
+        );
+
+    }
+
+
+    /* =====================================================
+       SEARCH + FILTER
+    ===================================================== */
+
+    searchInput.addEventListener(
+        "input",
+        filterStudents
+    );
+
+
+    riskFilter.addEventListener(
+        "change",
+        filterStudents
+    );
+
+
+    function filterStudents() {
+
+        const searchText =
+            searchInput.value
+                .toLowerCase()
+                .trim();
+
+
+        const selectedRisk =
+            riskFilter.value;
+
+
+        const rows =
+            document.querySelectorAll(
+                "#studentTable tr"
+            );
+
+
+        rows.forEach(
+            function (row) {
+
+                const nameElement =
+                    row.querySelector(
+                        ".student-name"
+                    );
+
+
+                const idElement =
+                    row.querySelector(
+                        ".student-id"
+                    );
+
+
+                if (
+                    !nameElement ||
+                    !idElement
+                ) {
+
+                    return;
+
+                }
+
+
+                const name =
+                    nameElement
+                        .textContent
+                        .toLowerCase();
+
+
+                const id =
+                    idElement
+                        .textContent
+                        .toLowerCase();
+
+
+                const rowRisk =
+                    row.getAttribute(
+                        "data-risk"
+                    );
+
+
+                const searchMatch =
+                    name.includes(
+                        searchText
+                    ) ||
+                    id.includes(
+                        searchText
+                    );
+
+
+                const riskMatch =
+                    selectedRisk === "all" ||
+                    rowRisk === selectedRisk;
+
+
+                row.style.display =
+                    searchMatch &&
+                    riskMatch
+                        ? ""
+                        : "none";
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       UPDATE STATISTICS
+    ===================================================== */
+
+    function updateStatistics() {
+
+        const rows =
+            document.querySelectorAll(
+                "#studentTable tr"
+            );
+
+
+        let high =
+            0;
+
+        let medium =
+            0;
+
+        let low =
+            0;
+
+
+        rows.forEach(
+            function (row) {
+
+                const risk =
+                    row.getAttribute(
+                        "data-risk"
+                    );
+
+
+                if (
+                    risk === "high"
+                ) {
+
+                    high++;
+
+                }
+
+                else if (
+                    risk === "medium"
+                ) {
+
+                    medium++;
+
+                }
+
+                else if (
+                    risk === "low"
+                ) {
+
+                    low++;
+
+                }
+
+            }
+        );
+
+
+        document.getElementById(
+            "totalStudents"
+        ).innerText =
+            high + medium + low;
+
+
+        document.getElementById(
+            "highRisk"
+        ).innerText =
+            high;
+
+
+        document.getElementById(
+            "mediumRisk"
+        ).innerText =
+            medium;
+
+
+        document.getElementById(
+            "lowRisk"
+        ).innerText =
+            low;
+
+    }
+
+
+    /* =====================================================
+       ESCAPE HTML
+    ===================================================== */
+
+    function escapeHtml(value) {
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+
+        div.textContent =
+            value;
+
+
+        return div.innerHTML;
+
+    }
+
+
+    /* =====================================================
+       INITIAL LOAD
+    ===================================================== */
+
+    loadStudents();
+
+});
+
+</script>

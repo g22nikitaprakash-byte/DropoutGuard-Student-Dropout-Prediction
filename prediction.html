@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dropout Prediction | DropoutGuard</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            padding: 25px 18px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 45px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #6c63ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-name {
+            color: #1f2937;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            text-decoration: none;
+            color: #6b7280;
+            padding: 14px 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .nav-link:hover {
+            background: #f0efff;
+            color: #6c63ff;
+        }
+
+        .nav-link.active {
+            background: #6c63ff;
+            color: white;
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+        }
+
+        /* MAIN */
+
+        .main-content {
+            margin-left: 250px;
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .page-header p {
+            color: #6b7280;
+        }
+
+        /* FORM CARD */
+
+        .prediction-card {
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+            max-width: 900px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        }
+
+        .card-title {
+            margin-bottom: 25px;
+        }
+
+        .card-title h2 {
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+
+        .card-title p {
+            color: #9ca3af;
+            font-size: 13px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #6c63ff;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .predict-button {
+            margin-top: 25px;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #6c63ff;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .predict-button:hover {
+            background: #574fd6;
+        }
+
+        /* RESULT */
+
+        .result-card {
+            display: none;
+            margin-top: 25px;
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+            max-width: 900px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        }
+
+        .result-card.show {
+            display: block;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .result-header h2 {
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .result-header p {
+            color: #6b7280;
+        }
+
+        .risk-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #fee2e2;
+            border: 10px solid #fecaca;
+            margin: 0 auto 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .risk-circle strong {
+            font-size: 35px;
+            color: #dc2626;
+        }
+
+        .risk-circle span {
+            color: #dc2626;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .risk-level {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .risk-level span {
+            display: inline-block;
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .result-section h3 {
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+
+        .factor {
+            display: flex;
+            justify-content: space-between;
+            padding: 13px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .factor span:last-child {
+            font-weight: bold;
+            color: #dc2626;
+        }
+
+        .recommendations {
+            margin-top: 25px;
+        }
+
+        .recommendation {
+            background: #f8f8ff;
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .recommendation strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .recommendation p {
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        /* ================================
+           SHAP EXPLANATION
+        ================================= */
+
+        .shap-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eeeeee;
+        }
+
+        .shap-description {
+            color: #6b7280;
+            font-size: 12px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .explain-button {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #6c63ff;
+            border-radius: 10px;
+            background: white;
+            color: #6c63ff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .explain-button:hover {
+            background: #f0efff;
+        }
+
+        .shap-loading {
+            margin-top: 15px;
+            padding: 14px;
+            background: #f8f8ff;
+            border-radius: 10px;
+            color: #6b7280;
+            font-size: 12px;
+            display: none;
+        }
+
+        .shap-results {
+            margin-top: 15px;
+            display: none;
+        }
+
+        .shap-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 13px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .shap-item:last-child {
+            border-bottom: none;
+        }
+
+        .shap-feature {
+            font-size: 12px;
+            font-weight: bold;
+            color: #1f2937;
+            line-height: 1.4;
+        }
+
+        .shap-impact {
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .shap-positive {
+            color: #dc2626;
+        }
+
+        .shap-negative {
+            color: #16a34a;
+        }
+
+        .shap-neutral {
+            color: #6b7280;
+        }
+
+        .shap-note {
+            margin-top: 12px;
+            padding: 12px;
+            background: #f8f8ff;
+            border-radius: 10px;
+            color: #6b7280;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+
+        /* RESPONSIVE */
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 70px;
+                padding: 20px 10px;
+            }
+
+            .brand-name {
+                display: none;
+            }
+
+            .nav-link span:not(.nav-icon) {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🎓
+            </div>
+
+            <span class="brand-name">
+                DropoutGuard
+            </span>
+
+        </div>
+
+        <nav class="nav-menu">
+
+            <a href="dashboard.html" class="nav-link">
+
+                <span class="nav-icon">📊</span>
+                <span>Dashboard</span>
+
+            </a>
+
+            <a href="prediction.html" class="nav-link active">
+
+                <span class="nav-icon">🤖</span>
+                <span>Prediction</span>
+
+            </a>
+
+            <a href="students.html" class="nav-link">
+
+                <span class="nav-icon">👨‍🎓</span>
+                <span>Students</span>
+
+            </a>
+
+            <a href="faculty.html" class="nav-link">
+
+                <span class="nav-icon">👨‍🏫</span>
+                <span>Faculty</span>
+
+            </a>
+
+            <a href="reports.html" class="nav-link">
+
+                <span class="nav-icon">📈</span>
+                <span>Reports</span>
+
+            </a>
+
+            <a href="index.html" class="nav-link">
+
+                <span class="nav-icon">🚪</span>
+                <span>Logout</span>
+
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+        <div class="page-header">
+
+            <h1>Dropout Risk Prediction</h1>
+
+            <p>
+                Enter student information to generate an early warning prediction.
+            </p>
+
+        </div>
+
+
+        <!-- PREDICTION FORM -->
+
+        <div class="prediction-card">
+
+            <div class="card-title">
+
+                <h2>Student Information</h2>
+
+                <p>
+                    Provide academic, demographic and financial information.
+                </p>
+
+            </div>
+
+
+            <form id="predictionForm">
+
+                <div class="form-grid">
+
+
+                    <div class="form-group">
+
+                        <label>Age at Enrollment</label>
+
+                        <input
+                            type="number"
+                            id="age"
+                            placeholder="Example: 20"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Admission Grade</label>
+
+                        <input
+                            type="number"
+                            id="admissionGrade"
+                            placeholder="Example: 140"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Previous Qualification</label>
+
+                        <select id="qualification">
+
+                            <option value="">
+                                Select Qualification
+                            </option>
+
+                            <option>Secondary Education</option>
+                            <option>Higher Education</option>
+                            <option>Bachelor Degree</option>
+                            <option>Master Degree</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Scholarship Holder</label>
+
+                        <select id="scholarship">
+
+                            <option value="">
+                                Select Option
+                            </option>
+
+                            <option>Yes</option>
+                            <option>No</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Tuition Fees Up To Date</label>
+
+                        <select id="tuition">
+
+                            <option value="">
+                                Select Option
+                            </option>
+
+                            <option>Yes</option>
+                            <option>No</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Debtor</label>
+
+                        <select id="debtor">
+
+                            <option value="">
+                                Select Option
+                            </option>
+
+                            <option>Yes</option>
+                            <option>No</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>1st Semester Grade</label>
+
+                        <input
+                            type="number"
+                            id="semester1"
+                            step="0.01"
+                            placeholder="Example: 13.5"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>2nd Semester Grade</label>
+
+                        <input
+                            type="number"
+                            id="semester2"
+                            step="0.01"
+                            placeholder="Example: 12.8"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>1st Semester Approved Units</label>
+
+                        <input
+                            type="number"
+                            id="approved1"
+                            placeholder="Example: 5"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>2nd Semester Approved Units</label>
+
+                        <input
+                            type="number"
+                            id="approved2"
+                            placeholder="Example: 5"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group full-width">
+
+                        <label>Attendance Percentage</label>
+
+                        <input
+                            type="number"
+                            id="attendance"
+                            min="0"
+                            max="100"
+                            placeholder="Example: 75"
+                            required
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="predict-button"
+                >
+                    🤖 Generate Dropout Prediction
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- RESULT -->
+
+        <div class="result-card" id="resultCard">
+
+            <div class="result-header">
+
+                <h2>Prediction Result</h2>
+
+                <p>
+                    Early warning assessment generated successfully.
+                </p>
+
+            </div>
+
+
+            <div class="risk-circle">
+
+                <strong>72%</strong>
+
+                <span>RISK</span>
+
+            </div>
+
+
+            <div class="risk-level">
+
+                <span>
+                    HIGH RISK
+                </span>
+
+            </div>
+
+
+            <div class="result-section">
+
+                <h3>
+                    ⚠ Top Risk Factors
+                </h3>
+
+
+                <div class="factor">
+
+                    <span>
+                        Academic Performance
+                    </span>
+
+                    <span>
+                        High
+                    </span>
+
+                </div>
+
+
+                <div class="factor">
+
+                    <span>
+                        Attendance
+                    </span>
+
+                    <span>
+                        Medium
+                    </span>
+
+                </div>
+
+
+                <div class="factor">
+
+                    <span>
+                        Financial Status
+                    </span>
+
+                    <span>
+                        Medium
+                    </span>
+
+                </div>
+
+
+                <div class="factor">
+
+                    <span>
+                        Semester Progress
+                    </span>
+
+                    <span>
+                        High
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- SHAP EXPLAINABLE AI -->
+
+            <div class="shap-section">
+
+                <h3>
+                    🔍 Why This Prediction?
+                </h3>
+
+                <p class="shap-description">
+                    Explainable AI shows which input features contributed most
+                    to the model's dropout-risk prediction for this student.
+                </p>
+
+                <button
+                    type="button"
+                    class="explain-button"
+                    id="explainButton"
+                >
+                    🔍 Explain Prediction with SHAP
+                </button>
+
+                <div
+                    id="shapLoading"
+                    class="shap-loading"
+                >
+                    Generating SHAP explanation...
+                </div>
+
+                <div
+                    id="shapResults"
+                    class="shap-results"
+                >
+                </div>
+
+            </div>
+
+
+            <div class="recommendations">
+
+                <h3>
+                    💡 Recommended Interventions
+                </h3>
+
+
+                <div class="recommendation">
+
+                    <strong>
+                        📖 Academic Counselling
+                    </strong>
+
+                    <p>
+                        Schedule an academic counselling session with the assigned faculty mentor.
+                    </p>
+
+                </div>
+
+
+                <div class="recommendation">
+
+                    <strong>
+                        👨‍🏫 Faculty Mentoring
+                    </strong>
+
+                    <p>
+                        Monitor the student's academic progress regularly.
+                    </p>
+
+                </div>
+
+
+                <div class="recommendation">
+
+                    <strong>
+                        📅 Attendance Improvement
+                    </strong>
+
+                    <p>
+                        Encourage the student to maintain regular attendance.
+                    </p>
+
+                </div>
+
+
+                <div class="recommendation">
+
+                    <strong>
+                        💰 Financial Support
+                    </strong>
+
+                    <p>
+                        Check scholarship and available financial assistance options.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+    <script src="js/script.js"></script>
+
+    <script>
+
+        // ==========================================
+        // SHAP EXPLAINABLE AI
+        // ==========================================
+
+        const explainButton =
+            document.getElementById("explainButton");
+
+        if (explainButton) {
+
+            explainButton.addEventListener(
+                "click",
+                explainPrediction
+            );
+
+        }
+
+
+        async function explainPrediction() {
+
+            const loading =
+                document.getElementById("shapLoading");
+
+            const results =
+                document.getElementById("shapResults");
+
+
+            // Read current form values
+
+            const age =
+                Number(
+                    document.getElementById("age")?.value || 20
+                );
+
+            const admissionGrade =
+                Number(
+                    document.getElementById("admissionGrade")?.value || 120
+                );
+
+            const semester1 =
+                Number(
+                    document.getElementById("semester1")?.value || 10
+                );
+
+            const semester2 =
+                Number(
+                    document.getElementById("semester2")?.value || 10
+                );
+
+            const approved1 =
+                Number(
+                    document.getElementById("approved1")?.value || 5
+                );
+
+            const approved2 =
+                Number(
+                    document.getElementById("approved2")?.value || 5
+                );
+
+
+            const scholarshipValue =
+                document.getElementById(
+                    "scholarship"
+                )?.value || "No";
+
+
+            const debtorValue =
+                document.getElementById(
+                    "debtor"
+                )?.value || "No";
+
+
+            const tuitionValue =
+                document.getElementById(
+                    "tuition"
+                )?.value || "No";
+
+
+            const scholarship =
+                scholarshipValue.toLowerCase() === "yes"
+                    ? 1
+                    : 0;
+
+
+            const debtor =
+                debtorValue.toLowerCase() === "yes"
+                    ? 1
+                    : 0;
+
+
+            const tuition =
+                tuitionValue.toLowerCase() === "yes"
+                    ? 1
+                    : 0;
+
+
+            // Show loading
+
+            if (loading) {
+
+                loading.style.display = "block";
+
+                loading.textContent =
+                    "Generating SHAP explanation...";
+
+            }
+
+
+            if (results) {
+
+                results.style.display = "none";
+
+                results.innerHTML = "";
+
+            }
+
+
+            if (explainButton) {
+
+                explainButton.disabled = true;
+
+                explainButton.textContent =
+                    "Generating Explanation...";
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "http://127.0.0.1:8000/explain",
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                age: age,
+
+                                admission_grade:
+                                    admissionGrade,
+
+                                attendance:
+                                    Number(
+                                        document.getElementById(
+                                            "attendance"
+                                        )?.value || 0
+                                    ),
+
+                                semester1_grade:
+                                    semester1,
+
+                                semester2_grade:
+                                    semester2,
+
+                                approved1:
+                                    approved1,
+
+                                approved2:
+                                    approved2,
+
+                                scholarship:
+                                    scholarship,
+
+                                debtor:
+                                    debtor,
+
+                                tuition:
+                                    tuition
+
+                            })
+
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    const errorText =
+                        await response.text();
+
+                    throw new Error(
+                        errorText ||
+                        "SHAP API failed"
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                const topFeatures =
+                    Array.isArray(
+                        data.top_features
+                    )
+                        ? data.top_features
+                        : [];
+
+
+                let html = "";
+
+
+                if (topFeatures.length === 0) {
+
+                    html = `
+                        <div class="shap-note">
+                            No feature contribution data was returned.
+                        </div>
+                    `;
+
+                } else {
+
+                    topFeatures.forEach(
+                        item => {
+
+                            const value =
+                                Number(
+                                    item.shap_value || 0
+                                );
+
+
+                            let className =
+                                "shap-neutral";
+
+                            let symbol =
+                                "•";
+
+                            let text =
+                                "No significant impact";
+
+
+                            if (value > 0) {
+
+                                className =
+                                    "shap-positive";
+
+                                symbol =
+                                    "↑";
+
+                                text =
+                                    "Increases dropout risk";
+
+                            } else if (value < 0) {
+
+                                className =
+                                    "shap-negative";
+
+                                symbol =
+                                    "↓";
+
+                                text =
+                                    "Decreases dropout risk";
+                            }
+
+
+                            html += `
+
+                                <div class="shap-item">
+
+                                    <div class="shap-feature">
+
+                                        ${item.feature}
+
+                                    </div>
+
+                                    <div
+                                        class="shap-impact ${className}"
+                                    >
+
+                                        ${symbol}
+                                        ${Math.abs(value).toFixed(4)}
+                                        —
+                                        ${text}
+
+                                    </div>
+
+                                </div>
+
+                            `;
+
+                        }
+                    );
+
+
+                    html += `
+
+                        <div class="shap-note">
+
+                            <strong>
+                                Prediction:
+                            </strong>
+                            ${data.prediction || "Unknown"}
+                            <br>
+
+                            <strong>
+                                Dropout Probability:
+                            </strong>
+                            ${Number(
+                                data.dropout_probability || 0
+                            ).toFixed(2)}%
+
+                            <br><br>
+
+                            SHAP values describe model contribution
+                            for this specific prediction; they do not
+                            establish that a feature causes dropout.
+
+                        </div>
+
+                    `;
+
+                }
+
+
+                if (results) {
+
+                    results.innerHTML =
+                        html;
+
+                    results.style.display =
+                        "block";
+
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "SHAP Error:",
+                    error
+                );
+
+
+                if (results) {
+
+                    results.innerHTML = `
+
+                        <div class="shap-note">
+
+                            Unable to generate SHAP explanation.
+
+                            <br><br>
+
+                            Please make sure FastAPI is running
+                            and the <strong>/explain</strong> API
+                            is available.
+
+                        </div>
+
+                    `;
+
+                    results.style.display =
+                        "block";
+
+                }
+
+            } finally {
+
+                if (loading) {
+
+                    loading.style.display =
+                        "none";
+
+                }
+
+
+                if (explainButton) {
+
+                    explainButton.disabled =
+                        false;
+
+                    explainButton.textContent =
+                        "🔍 Explain Prediction with SHAP";
+
+                }
+
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>
+
+
+   
+

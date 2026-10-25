@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | DropoutGuard</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            padding: 25px 18px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 45px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #6c63ff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            text-decoration: none;
+            color: #6b7280;
+            padding: 14px 15px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            background: #f0efff;
+            color: #6c63ff;
+        }
+
+        .nav-link.active {
+            background: #6c63ff;
+            color: white;
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main-content {
+            margin-left: 250px;
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .page-title h1 {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .page-title p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .admin-profile {
+            background: white;
+            padding: 10px 16px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #6c63ff;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .profile-role {
+            color: #9ca3af;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        /* ================= STATS ================= */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        }
+
+        .stat-title {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .purple {
+            color: #6c63ff;
+        }
+
+        .high {
+            color: #dc2626;
+        }
+
+        .medium {
+            color: #d97706;
+        }
+
+        .low {
+            color: #16a34a;
+        }
+
+        /* ================= CARD ================= */
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        }
+
+        .card-heading {
+            margin-bottom: 20px;
+        }
+
+        .card-heading h2 {
+            font-size: 19px;
+            margin-bottom: 5px;
+        }
+
+        .card-heading p {
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        /* ================= QUICK ACTIONS ================= */
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .quick-card {
+            padding: 20px;
+            background: #f8f8ff;
+            border-radius: 12px;
+            border: 1px solid #eeeeff;
+        }
+
+        .quick-icon {
+            font-size: 25px;
+            margin-bottom: 10px;
+        }
+
+        .quick-card h3 {
+            font-size: 15px;
+            margin-bottom: 7px;
+        }
+
+        .quick-card p {
+            color: #6b7280;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .quick-card a {
+            display: inline-block;
+            margin-top: 12px;
+            text-decoration: none;
+            color: #6c63ff;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* ================= TABLE ================= */
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8f8ff;
+            text-align: left;
+            padding: 14px;
+            font-size: 12px;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 13px;
+        }
+
+        .student-name {
+            font-weight: bold;
+        }
+
+        .student-id {
+            color: #9ca3af;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .risk-badge {
+            display: inline-block;
+            padding: 6px 11px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .risk-high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .risk-medium {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .risk-low {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        /* ================= INSIGHTS ================= */
+
+        .insights {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .insight-box {
+            background: #f8f8ff;
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .insight-box strong {
+            display: block;
+            margin-bottom: 7px;
+        }
+
+        .insight-box p {
+            color: #6b7280;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .loading {
+            color: #9ca3af;
+            font-size: 13px;
+            padding: 15px 0;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width:1100px) {
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .quick-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+        }
+
+        @media(max-width:800px) {
+
+            .sidebar {
+                width: 70px;
+            }
+
+            .brand-name {
+                display: none;
+            }
+
+            .nav-link span:not(.nav-icon) {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+                padding: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .insights {
+                grid-template-columns: 1fr;
+            }
+
+            .top-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+        }
+
+    </style>
+
+
+    <!-- =====================================================
+         ADMIN ACCESS PROTECTION
+         ===================================================== -->
+
+    <script>
+
+        const userRole =
+            localStorage.getItem("userRole");
+
+        if (userRole !== "admin") {
+
+            alert(
+                "Access denied. Admin login required."
+            );
+
+            window.location.href =
+                "login.html";
+        }
+
+    </script>
+
+</head>
+
+
+<body>
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🎓
+            </div>
+
+            <span class="brand-name">
+                DropoutGuard
+            </span>
+
+        </div>
+
+
+        <nav class="nav-menu">
+
+            <a href="admin.html"
+               class="nav-link active">
+
+                <span class="nav-icon">
+                    👨‍💼
+                </span>
+
+                <span>
+                    Admin
+                </span>
+
+            </a>
+
+
+            <a href="dashboard.html"
+               class="nav-link">
+
+                <span class="nav-icon">
+                    📊
+                </span>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            <a href="prediction.html"
+               class="nav-link">
+
+                <span class="nav-icon">
+                    🤖
+                </span>
+
+                <span>
+                    Prediction
+                </span>
+
+            </a>
+
+
+            <a href="students.html"
+               class="nav-link">
+
+                <span class="nav-icon">
+                    👨‍🎓
+                </span>
+
+                <span>
+                    Students
+                </span>
+
+            </a>
+
+
+            <a href="faculty.html"
+               class="nav-link">
+
+                <span class="nav-icon">
+                    👨‍🏫
+                </span>
+
+                <span>
+                    Faculty
+                </span>
+
+            </a>
+
+
+            <a href="reports.html"
+               class="nav-link">
+
+                <span class="nav-icon">
+                    📈
+                </span>
+
+                <span>
+                    Reports
+                </span>
+
+            </a>
+
+
+            <a href="index.html"
+               class="nav-link"
+               id="logoutLink">
+
+                <span class="nav-icon">
+                    🚪
+                </span>
+
+                <span>
+                    Logout
+                </span>
+
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main-content">
+
+
+        <!-- HEADER -->
+
+        <header class="top-header">
+
+            <div class="page-title">
+
+                <h1>
+                    Admin Dashboard
+                </h1>
+
+                <p>
+                    Manage and monitor the student dropout prediction system.
+                </p>
+
+            </div>
+
+
+            <div class="admin-profile">
+
+                <div class="admin-avatar">
+                    A
+                </div>
+
+                <div>
+
+                    <strong id="adminEmail">
+                        Admin
+                    </strong>
+
+                    <div class="profile-role">
+                        Administrator
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================= STATISTICS ================= -->
+
+        <section class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <div class="stat-title">
+                    Total Students
+                </div>
+
+                <div
+                    class="stat-number purple"
+                    id="totalStudents">
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-title">
+                    High Risk
+                </div>
+
+                <div
+                    class="stat-number high"
+                    id="highRisk">
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-title">
+                    Medium Risk
+                </div>
+
+                <div
+                    class="stat-number medium"
+                    id="mediumRisk">
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-title">
+                    Interventions
+                </div>
+
+                <div
+                    class="stat-number purple"
+                    id="totalInterventions">
+                    0
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= QUICK ACTIONS ================= -->
+
+        <section class="card">
+
+            <div class="card-heading">
+
+                <h2>
+                    ⚡ Quick Actions
+                </h2>
+
+                <p>
+                    Access important system modules.
+                </p>
+
+            </div>
+
+
+            <div class="quick-grid">
+
+
+                <div class="quick-card">
+
+                    <div class="quick-icon">
+                        👨‍🎓
+                    </div>
+
+                    <h3>
+                        Student Management
+                    </h3>
+
+                    <p>
+                        View student records and monitor their dropout risk.
+                    </p>
+
+                    <a href="students.html">
+                        Open Students →
+                    </a>
+
+                </div>
+
+
+                <div class="quick-card">
+
+                    <div class="quick-icon">
+                        👨‍🏫
+                    </div>
+
+                    <h3>
+                        Faculty Monitoring
+                    </h3>
+
+                    <p>
+                        Review student risk and faculty intervention activities.
+                    </p>
+
+                    <a href="faculty.html">
+                        Open Faculty →
+                    </a>
+
+                </div>
+
+
+                <div class="quick-card">
+
+                    <div class="quick-icon">
+                        📈
+                    </div>
+
+                    <h3>
+                        Reports & Analytics
+                    </h3>
+
+                    <p>
+                        Analyze system performance and student risk trends.
+                    </p>
+
+                    <a href="reports.html">
+                        Open Reports →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= STUDENT OVERVIEW ================= -->
+
+        <section class="card">
+
+            <div class="card-heading">
+
+                <h2>
+                    🎯 Student Risk Overview
+                </h2>
+
+                <p>
+                    Latest student records from the database.
+                </p>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Student
+                            </th>
+
+                            <th>
+                                Department
+                            </th>
+
+                            <th>
+                                Academic
+                            </th>
+
+                            <th>
+                                Attendance
+                            </th>
+
+                            <th>
+                                Dropout Probability
+                            </th>
+
+                            <th>
+                                Risk
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="studentTable">
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                class="loading"
+                                style="text-align:center;">
+
+                                Loading student records...
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= SYSTEM INSIGHTS ================= -->
+
+        <section class="card">
+
+            <div class="card-heading">
+
+                <h2>
+                    💡 System Insights
+                </h2>
+
+                <p>
+                    Current overview based on available data.
+                </p>
+
+            </div>
+
+
+            <div class="insights">
+
+
+                <div class="insight-box">
+
+                    <strong>
+                        🚨 High Risk Monitoring
+                    </strong>
+
+                    <p id="highRiskInsight">
+                        Loading...
+                    </p>
+
+                </div>
+
+
+                <div class="insight-box">
+
+                    <strong>
+                        👨‍🏫 Intervention Activity
+                    </strong>
+
+                    <p id="interventionInsight">
+                        Loading...
+                    </p>
+
+                </div>
+
+
+                <div class="insight-box">
+
+                    <strong>
+                        📚 Academic Performance
+                    </strong>
+
+                    <p id="academicInsight">
+                        Loading...
+                    </p>
+
+                </div>
+
+
+                <div class="insight-box">
+
+                    <strong>
+                        📅 Attendance
+                    </strong>
+
+                    <p id="attendanceInsight">
+                        Loading...
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- ================= ADMIN JAVASCRIPT ================= -->
+
+    <script>
+
+        const API_URL =
+            "http://127.0.0.1:8000";
+
+        let students = [];
+
+        let interventions = [];
+
+
+        // ==========================================
+        // LOAD ADMIN DATA
+        // ==========================================
+
+        async function loadAdminData() {
+
+            try {
+
+                const studentsResponse =
+                    await fetch(
+                        `${API_URL}/students`
+                    );
+
+
+                if (!studentsResponse.ok) {
+
+                    throw new Error(
+                        "Unable to load students"
+                    );
+
+                }
+
+
+                students =
+                    await studentsResponse.json();
+
+
+                const interventionsResponse =
+                    await fetch(
+                        `${API_URL}/interventions`
+                    );
+
+
+                if (interventionsResponse.ok) {
+
+                    interventions =
+                        await interventionsResponse.json();
+
+                }
+
+
+                updateStatistics();
+
+                displayStudents();
+
+                updateInsights();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Admin Dashboard Error:",
+                    error
+                );
+
+
+                document.getElementById(
+                    "studentTable"
+                ).innerHTML = `
+
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            style="
+                                text-align:center;
+                                padding:30px;
+                                color:#dc2626;
+                            ">
+
+                            Unable to load backend data.
+                            Please make sure FastAPI is running.
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+
+        }
+
+
+        // ==========================================
+        // UPDATE STATISTICS
+        // ==========================================
+
+        function updateStatistics() {
+
+            const high =
+                students.filter(
+                    s =>
+                        String(
+                            s.risk_level || ""
+                        )
+                        .toLowerCase()
+                        .includes("high")
+                ).length;
+
+
+            const medium =
+                students.filter(
+                    s =>
+                        String(
+                            s.risk_level || ""
+                        )
+                        .toLowerCase()
+                        .includes("medium")
+                ).length;
+
+
+            document.getElementById(
+                "totalStudents"
+            ).textContent =
+                students.length;
+
+
+            document.getElementById(
+                "highRisk"
+            ).textContent =
+                high;
+
+
+            document.getElementById(
+                "mediumRisk"
+            ).textContent =
+                medium;
+
+
+            document.getElementById(
+                "totalInterventions"
+            ).textContent =
+                interventions.length;
+
+        }
+
+
+        // ==========================================
+        // DISPLAY STUDENTS
+        // ==========================================
+
+        function displayStudents() {
+
+            const table =
+                document.getElementById(
+                    "studentTable"
+                );
+
+            table.innerHTML = "";
+
+
+            if (!students.length) {
+
+                table.innerHTML = `
+
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            style="
+                                text-align:center;
+                                padding:30px;
+                                color:#9ca3af;
+                            ">
+
+                            No student records found.
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+                return;
+            }
+
+
+            students.forEach(
+                student => {
+
+                    const risk =
+                        student.risk_level ||
+                        "Low Risk";
+
+
+                    let riskClass =
+                        "risk-low";
+
+
+                    if (
+                        risk
+                            .toLowerCase()
+                            .includes("high")
+                    ) {
+
+                        riskClass =
+                            "risk-high";
+
+                    }
+
+                    else if (
+                        risk
+                            .toLowerCase()
+                            .includes("medium")
+                    ) {
+
+                        riskClass =
+                            "risk-medium";
+
+                    }
+
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    row.innerHTML = `
+
+                        <td>
+
+                            <div class="student-name">
+                                ${student.student_name || "Unknown"}
+                            </div>
+
+                            <div class="student-id">
+                                ${student.student_id || "—"}
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            ${student.department || "—"}
+                        </td>
+
+
+                        <td>
+                            ${Number(
+                                student.academic_average || 0
+                            ).toFixed(2)}
+                        </td>
+
+
+                        <td>
+                            ${Number(
+                                student.attendance || 0
+                            ).toFixed(1)}%
+                        </td>
+
+
+                        <td>
+                            ${Number(
+                                student.dropout_probability || 0
+                            ).toFixed(2)}%
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="risk-badge ${riskClass}">
+
+                                ${risk}
+
+                            </span>
+
+                        </td>
+
+                    `;
+
+
+                    table.appendChild(row);
+
+                }
+            );
+
+        }
+
+
+        // ==========================================
+        // SYSTEM INSIGHTS
+        // ==========================================
+
+        function updateInsights() {
+
+            const high =
+                students.filter(
+                    s =>
+                        String(
+                            s.risk_level || ""
+                        )
+                        .toLowerCase()
+                        .includes("high")
+                ).length;
+
+
+            const avgAcademic =
+                students.length
+                    ? students.reduce(
+                        (sum, s) =>
+                            sum +
+                            Number(
+                                s.academic_average || 0
+                            ),
+                        0
+                    ) / students.length
+                    : 0;
+
+
+            const avgAttendance =
+                students.length
+                    ? students.reduce(
+                        (sum, s) =>
+                            sum +
+                            Number(
+                                s.attendance || 0
+                            ),
+                        0
+                    ) / students.length
+                    : 0;
+
+
+            document.getElementById(
+                "highRiskInsight"
+            ).textContent =
+
+                high > 0
+
+                    ? `${high} student(s) require close monitoring and early intervention.`
+
+                    : "No high-risk students are currently recorded.";
+
+
+            document.getElementById(
+                "interventionInsight"
+            ).textContent =
+
+                interventions.length > 0
+
+                    ? `${interventions.length} intervention record(s) are stored in the system.`
+
+                    : "No intervention records have been created yet.";
+
+
+            document.getElementById(
+                "academicInsight"
+            ).textContent =
+
+                students.length
+
+                    ? `Average academic score across recorded students is ${avgAcademic.toFixed(2)}.`
+
+                    : "No academic data available.";
+
+
+            document.getElementById(
+                "attendanceInsight"
+            ).textContent =
+
+                students.length
+
+                    ? `Average attendance across recorded students is ${avgAttendance.toFixed(1)}%.`
+
+                    : "No attendance data available.";
+
+        }
+
+
+        // ==========================================
+        // SHOW ADMIN EMAIL
+        // ==========================================
+
+        const savedEmail =
+            localStorage.getItem(
+                "userEmail"
+            );
+
+
+        if (savedEmail) {
+
+            document.getElementById(
+                "adminEmail"
+            ).textContent =
+                savedEmail;
+
+        }
+
+
+        // ==========================================
+        // LOGOUT
+        // ==========================================
+
+        document.getElementById(
+            "logoutLink"
+        ).addEventListener(
+            "click",
+            function() {
+
+                localStorage.removeItem(
+                    "userEmail"
+                );
+
+                localStorage.removeItem(
+                    "userRole"
+                );
+
+            }
+        );
+
+
+        // ==========================================
+        // START
+        // ==========================================
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            loadAdminData
+        );
+
+    </script>
+
+
+</body>
+
+</html>

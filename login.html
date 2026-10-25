@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login - Student Dropout Prediction System</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+    <div class="login-page">
+
+        <div class="login-card">
+
+            <div class="login-logo">
+                🎓
+            </div>
+
+            <h1>Welcome Back</h1>
+
+            <p class="login-subtitle">
+                Student Dropout Early Warning System
+            </p>
+
+
+            <!-- LOGIN FORM -->
+
+            <form id="loginForm">
+
+                <!-- EMAIL -->
+
+                <label for="email">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    required
+                >
+
+
+                <!-- PASSWORD -->
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    required
+                >
+
+
+                <!-- ROLE -->
+
+                <label for="role">
+                    Login As
+                </label>
+
+                <select id="role" required>
+
+                    <option value="student">
+                        Student
+                    </option>
+
+                    <option value="faculty">
+                        Faculty
+                    </option>
+
+                    <option value="admin">
+                        Admin
+                    </option>
+
+                </select>
+
+
+                <!-- LOGIN BUTTON -->
+
+                <button
+                    type="submit"
+                    class="login-btn"
+                >
+                    Login
+                </button>
+
+            </form>
+
+
+            <!-- LOGIN SCRIPT -->
+
+            <script>
+
+                document
+                    .getElementById("loginForm")
+                    .addEventListener(
+                        "submit",
+                        function(event) {
+
+                            event.preventDefault();
+
+
+                            // Get input values
+
+                            const email =
+                                document
+                                    .getElementById("email")
+                                    .value
+                                    .trim();
+
+                            const password =
+                                document
+                                    .getElementById("password")
+                                    .value
+                                    .trim();
+
+                            const role =
+                                document
+                                    .getElementById("role")
+                                    .value;
+
+
+                            // Validate fields
+
+                            if (!email || !password) {
+
+                                alert(
+                                    "Please enter email and password."
+                                );
+
+                                return;
+                            }
+
+
+                            // Save login information
+
+                            localStorage.setItem(
+                                "userEmail",
+                                email
+                            );
+
+                            localStorage.setItem(
+                                "userRole",
+                                role
+                            );
+
+
+                            // Role-based navigation
+
+                            if (role === "student") {
+
+                                window.location.href =
+                                    "dashboard.html";
+
+                            }
+
+                            else if (role === "faculty") {
+
+                                window.location.href =
+                                    "faculty.html";
+
+                            }
+
+                            else if (role === "admin") {
+
+                                window.location.href =
+                                    "admin.html";
+
+                            }
+
+                        }
+                    );
+
+            </script>
+
+
+            <p class="login-footer">
+                Machine Learning-Based Student Risk Prediction
+            </p>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
